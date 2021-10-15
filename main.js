@@ -54,10 +54,10 @@ function changeHP(player){
     $playerLife.style.width = player.hp + "%";
 }
 
-function getMatchResult(isDraw, name = null){
+function getMatchResult(isDraw, name){
     const $matchResultTitle = createElemWithClass('matchResultTitle');
 
-    $matchResultTitle.innerText = isDraw === 0 ? name + ' wins' : 'draw';
+    $matchResultTitle.innerText = !isDraw ? name + ' wins' : 'draw';
 
     $randomButton.disabled = true;
 
@@ -69,14 +69,12 @@ function getRoundResult(player1, player2){
         return;
     }
 
-    let $winner = '',
-        $isDraw = 0;
+    let $winner = '';
+    const $isDraw = player1.hp === player2.hp;
 
-    if(player1.hp != player2.hp){
+    if(!$isDraw){
         $winner = player1.hp > player2.hp ? player1.name : player2.name;
-    } else {
-        $isDraw = 1;
-    }
+    } 
 
     $arenas.appendChild(getMatchResult($isDraw, $winner))
 }
@@ -98,5 +96,5 @@ const player1 = createPlayerObject(1, 'SUB-ZERO', 'subzero');
 const player2 = createPlayerObject(2, 'Scorpion');
 
 
-$arenas.appendChild(createPlayer(player1) );
+$arenas.appendChild( createPlayer(player1) );
 $arenas.appendChild( createPlayer(player2) );

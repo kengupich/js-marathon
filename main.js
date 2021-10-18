@@ -8,6 +8,9 @@ function createPlayerObject(playerNumber, name, img = name.toLowerCase(), hp = 1
         attack  : function(){
             console.log(name + ' ' + attack);
         },
+        elHP    : elHP,
+        renderHP: renderHP,
+        changeHP: changeHP,
     };
 
     return newObject;
@@ -45,56 +48,72 @@ function createPlayer(object){
     return $player;
 }
 
-function changeHP(player){
-    const $playerLife = document.querySelector('.player' + player.player + ' .life');
-    const randomNumber = Math.ceil(Math.random() * 20);
-    
-    player.hp -= player.hp > randomNumber ? randomNumber : player.hp;
+function createReloadButton(){
+    const   $reloadWrap = createElemWithClass('reloadWrap'),
+            $reloadButton = createElemWithClass('button');
 
-    $playerLife.style.width = player.hp + "%";
+    $reloadWrap.appendChild($reloadButton);
+
+    $reloadButton.innerText = 'Restart';
+
+    return $reloadWrap;
 }
 
-function getMatchResult(isDraw, name){
+function getRandom(number){
+    return Math.ceil(Math.random() * number);
+}
+
+function elHP(){
+    return document.querySelector('.player' + this.player + ' .life');
+}
+
+function changeHP(hp){
+    this.hp -= this.hp > hp ? hp : this.hp;
+}
+
+function renderHP(){
+    this.elHP().style.width = this.hp + "%";
+}
+
+function shotResultText(name){
     const $matchResultTitle = createElemWithClass('matchResultTitle');
 
-    $matchResultTitle.innerText = !isDraw ? name + ' wins' : 'draw';
-
-    $randomButton.disabled = true;
+    $matchResultTitle.innerText = name != '' ? name + ' wins' : 'draw';
 
     return $matchResultTitle;
 }
 
-function getRoundResult(player1, player2){
-    if(player1.hp > 0 && player2.hp > 0){
-        return;
-    }
-
-    let $winner = '';
-    const $isDraw = player1.hp === player2.hp;
-
-    if(!$isDraw){
-        $winner = player1.hp > player2.hp ? player1.name : player2.name;
-    } 
-
-    $arenas.appendChild(getMatchResult($isDraw, $winner))
-}
-
-function startRound(player1, player2){
-    changeHP(player1);
-    changeHP(player2);
-    getRoundResult(player1, player2); 
-}
-
 const $arenas = document.body.querySelector('.arenas');
 const $randomButton = document.body.querySelector('.button');
-
-$randomButton.addEventListener('click', function(){
-    startRound(player1, player2);
-})
+const $reloadButton = createReloadButton();
 
 const player1 = createPlayerObject(1, 'SUB-ZERO', 'subzero');
 const player2 = createPlayerObject(2, 'Scorpion');
 
+$arenas.appendChild(createPlayer(player1));
+$arenas.appendChild(createPlayer(player2));
 
-$arenas.appendChild( createPlayer(player1) );
-$arenas.appendChild( createPlayer(player2) );
+$randomButton.addEventListener('click', function(){
+
+    player1.changeHP(getRandom(20));
+    player1.renderHP();
+    player2.changeHP(getRandom(20));
+    player2.renderHP();
+
+    if(player1.hp === 0 || player2.hp === 0){
+
+        $randomButton.disabled = true;
+        $arenas.appendChild($reloadButton);
+
+        let winner = player1.hp === player2.hp ? '' //draw
+            : player1.hp < player2.hp ? player2.name : player1.name; //wins
+        
+        $arenas.appendChild(shotResultText(winner))
+
+    }
+
+})
+
+$reloadButton.addEventListener('click', function(){
+    window.location.reload();
+})

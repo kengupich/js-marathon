@@ -147,6 +147,7 @@ $formFight.addEventListener('submit', function(e){
     if(player1.hp === 0 || player2.hp === 0){
         
         $btnFight.disabled = true;
+        $formFight.style.display = 'none';
         $arenas.appendChild(createReloadButton());
 
         let winner = 

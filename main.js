@@ -8,6 +8,10 @@ function createPlayerObject(playerNumber, name, img = name.toLowerCase(), hp = 1
         attack  : function(){
             console.log(name + ' ' + attack);
         },
+        elHP,
+        renderHP,
+        changeHP,
+        getRoundResult,
     };
 
     return newObject;
@@ -45,56 +49,111 @@ function createPlayer(object){
     return $player;
 }
 
-function changeHP(player){
-    const $playerLife = document.querySelector('.player' + player.player + ' .life');
-    const randomNumber = Math.ceil(Math.random() * 20);
-    
-    player.hp -= player.hp > randomNumber ? randomNumber : player.hp;
+function createReloadButton(){
+    const   $reloadWrap = createElemWithClass('reloadWrap'),
+            $reloadButton = createElemWithClass('button');
 
-    $playerLife.style.width = player.hp + "%";
+    $reloadWrap.appendChild($reloadButton);
+
+    $reloadButton.innerText = 'Restart';
+
+    $reloadButton.addEventListener('click', function(){
+        window.location.reload();
+    })
+
+    return $reloadWrap;
 }
 
-function getMatchResult(isDraw, name){
+function getRandom(number){
+    return Math.ceil(Math.random() * number);
+}
+
+function elHP(){
+    return document.querySelector('.player' + this.player + ' .life');
+}
+
+function changeHP(hp){
+    this.hp -= this.hp > hp ? hp : this.hp;
+}
+
+function renderHP(){
+    this.elHP().style.width = this.hp + "%";
+}
+
+function shotResultText(name){
     const $matchResultTitle = createElemWithClass('matchResultTitle');
 
-    $matchResultTitle.innerText = !isDraw ? name + ' wins' : 'draw';
-
-    $randomButton.disabled = true;
+    $matchResultTitle.innerText = name != '' ? name + ' wins' : 'draw';
 
     return $matchResultTitle;
 }
 
-function getRoundResult(player1, player2){
-    if(player1.hp > 0 && player2.hp > 0){
-        return;
+function enemyAttack(){
+    const hit = ATTACK[getRandom(3) - 1];
+    const value = getRandom(HIT[hit]);
+    const defence = ATTACK[getRandom(3) - 1];
+
+    return {
+        hit,
+        value,
+        defence
     }
-
-    let $winner = '';
-    const $isDraw = player1.hp === player2.hp;
-
-    if(!$isDraw){
-        $winner = player1.hp > player2.hp ? player1.name : player2.name;
-    } 
-
-    $arenas.appendChild(getMatchResult($isDraw, $winner))
 }
 
-function startRound(player1, player2){
-    changeHP(player1);
-    changeHP(player2);
-    getRoundResult(player1, player2); 
+function getRoundResult(fight){
+    if(fight[ (this.player % 2) ].hit != fight[ +!(this.player % 2) ].defence){
+        this.changeHP(fight[ (this.player % 2) ].value);
+        this.renderHP();
+    }
 }
+
+const HIT = {
+    head: 30,
+    body: 25,
+    foot: 20,
+}
+const ATTACK = ['head', 'body', 'foot'];
 
 const $arenas = document.body.querySelector('.arenas');
-const $randomButton = document.body.querySelector('.button');
-
-$randomButton.addEventListener('click', function(){
-    startRound(player1, player2);
-})
+const $btnFight = document.body.querySelector('.button');
+const $formFight = document.querySelector('form.control');
 
 const player1 = createPlayerObject(1, 'SUB-ZERO', 'subzero');
 const player2 = createPlayerObject(2, 'Scorpion');
 
+$arenas.appendChild(createPlayer(player1));
+$arenas.appendChild(createPlayer(player2));
 
-$arenas.appendChild( createPlayer(player1) );
-$arenas.appendChild( createPlayer(player2) );
+$formFight.addEventListener('submit', function(e){
+    e.preventDefault();
+
+    const enemy = enemyAttack();
+    const attack = {};
+
+    for(let item of this){
+        if(item.checked === true && item.name === 'hit'){
+            attack.hit = item.value;
+            attack.value = getRandom(HIT[item.value]);
+        }
+        if(item.checked === true && item.name === 'defence'){
+            attack.defence = item.value;
+        }
+        item.checked = false;
+    }
+    
+    player1.getRoundResult([enemy, attack]);
+    player2.getRoundResult([enemy, attack]);
+
+    if(player1.hp === 0 || player2.hp === 0){
+        
+        $btnFight.disabled = true;
+        $arenas.appendChild(createReloadButton());
+
+        let winner = 
+                player1.hp === player2.hp 
+                ? '' //draw
+                : player1.hp < player2.hp ? player2.name : player1.name; //wins
+        
+        $arenas.appendChild(shotResultText(winner))
+    }
+})

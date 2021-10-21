@@ -96,5 +96,5 @@ const player1 = createPlayerObject(1, 'SUB-ZERO', 'subzero');
 const player2 = createPlayerObject(2, 'Scorpion');
 
 
-$arenas.appendChild( createPlayer(player1) );
-$arenas.appendChild( createPlayer(player2) );
+$arenas.appendChild(createPlayer(player1));
+$arenas.appendChild(createPlayer(player2));

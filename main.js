@@ -100,9 +100,9 @@ function enemyAttack(){
     }
 }
 
-function getRoundResult(fight){
-    if(fight[ (this.player % 2) ].hit != fight[ +!(this.player % 2) ].defence){
-        this.changeHP(fight[ (this.player % 2) ].value);
+function getRoundResult(enemy, attack){
+    if(enemy.hit != attack.defence){
+        this.changeHP(enemy.value);
         this.renderHP();
     }
 }
@@ -141,12 +141,13 @@ $formFight.addEventListener('submit', function(e){
         item.checked = false;
     }
     
-    player1.getRoundResult([enemy, attack]);
-    player2.getRoundResult([enemy, attack]);
+    player1.getRoundResult(enemy, attack);
+    player2.getRoundResult(attack, enemy);
 
     if(player1.hp === 0 || player2.hp === 0){
         
         $btnFight.disabled = true;
+        $formFight.style.display = 'none';
         $arenas.appendChild(createReloadButton());
 
         let winner = 

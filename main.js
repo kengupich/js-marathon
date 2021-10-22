@@ -85,8 +85,7 @@ function shotResultText(name){
 
     $matchResultTitle.innerText = name != '' ? `${name} wins` : 'draw';
 
-function renderHP(){
-    this.elHP().style.width = this.hp + "%";
+    return $matchResultTitle;
 }
 
 function enemyAttack(){
@@ -120,7 +119,7 @@ function playerAttack(){
 
 function getRoundResult(enemyObject, enemy, player){
     if(enemy.hit != player.defence){
-        this.changeHP(100 + enemy.value);
+        this.changeHP(enemy.value);
         this.renderHP();
         generateLogs('hit', this, enemyObject, enemy.value, this.hp);
     } else {
@@ -263,4 +262,4 @@ $formFight.addEventListener('submit', function(e){
     player2.getRoundResult(player1, player, enemy);
 
     getMatchResult();
-})
+}) 

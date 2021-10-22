@@ -85,7 +85,8 @@ function shotResultText(name){
 
     $matchResultTitle.innerText = name != '' ? `${name} wins` : 'draw';
 
-    return $matchResultTitle;
+function renderHP(){
+    this.elHP().style.width = this.hp + "%";
 }
 
 function enemyAttack(){

@@ -88,6 +88,10 @@ function shotResultText(name){
     return $matchResultTitle;
 }
 
+function normalize(num){
+    return num.toString().length > 1 ? num : `0${num}`;
+}
+
 function enemyAttack(){
     const hit = ATTACK[getRandom(3) - 1];
     const value = getRandom(HIT[hit]);
@@ -153,7 +157,7 @@ function getMatchResult(){
 function generateLogs(type, player, enemy, diffHP, currentHP){
     let text = '';
     const date = new Date();
-    const time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+    const time = `${normalize(date.getHours())}:${normalize(date.getMinutes())}:${normalize(date.getSeconds())}`;
     
     switch(type){
         case 'start': 

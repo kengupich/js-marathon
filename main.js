@@ -1,10 +1,11 @@
-function createPlayerObject(playerNumber, name, img = name.toLowerCase(), hp = 100, weapon = ['hand', 'leg', 'head'], attack = 'Fight...'){
+function createPlayerObject(player, name, sex, img = name.toLowerCase(), hp = 100, weapon = ['hand', 'leg', 'head'], attack = 'Fight...'){
     const newObject = {
-        player  : playerNumber,
-        name    : name,
-        hp      : hp,
+        player,
+        name,
+        sex,
+        hp,
         img     : `http://reactmarathon-api.herokuapp.com/assets/${img}.gif`,
-        weapon  : weapon,
+        weapon,
         attack  : function(){
             console.log(`${name} ${attack}`);
         },
@@ -154,36 +155,65 @@ function getMatchResult(){
     }
 }
 
-function generateLogs(type, player, enemy, diffHP, currentHP){
-    let text = '';
+function changeSexVerb(wordEnd){
+    switch(wordEnd){
+        case 'лся':
+            return 'лась';
+        case 'ел':
+            return 'ла';
+        default:
+            return `${wordEnd}а`;
+    }
+}
+
+function generateLogs(type, player, enemy, diffHP){
+    let text = logs[type];
     const date = new Date();
     const time = `${normalize(date.getHours())}:${normalize(date.getMinutes())}:${normalize(date.getSeconds())}`;
+    const regSexDefence = /(?<=Defence\]\s*\S*\s\S+)(лся|ел|ал|ил|ул|ял)(?=\s|,)/g;
+    const regSexKick = /(?<=Kick\]\s*\S*\s\S+)(лся|ел|ал|ил|ул|ял)(?=\s|,)/g;
+    const regPlayer = /(\[player(?:1|Defence|Wins)\])/g;
+    const regEnemy = /(\[player(?:2|Kick|Lose)\])/g;
     
     switch(type){
         case 'start': 
-            text = logs[type]
-                .replace('[time]', time)
-                .replace('[player1]', player.name)
-                .replace('[player2]', enemy.name);
+            text = text
+                    .replace('[time]', time)
+                    .replace(regPlayer, player.name)
+                    .replace(regEnemy, enemy.name);
             break;
         case 'hit': 
-            text = `${time} - ${logs[type][getRandom(logs[type].length) - 1]
-                .replace('[playerDefence]', player.name)
-                .replace('[playerKick]', enemy.name)}
-                -${diffHP} [${currentHP}/100]`;
+            text = text[getRandom(text.length) - 1]
+                    .replace(regSexDefence, function(word){
+                        return player.sex === 'f' ? changeSexVerb(word) : word;
+                    })
+                    .replace(regPlayer, player.name)
+                    .replace(regSexKick, function(word){
+                        return enemy.sex === 'f' ? changeSexVerb(word) : word;
+                    })
+                    .replace(regEnemy, enemy.name);
+            text = `${time} - ${text} -${diffHP} [${player.hp}/100]`;
             break;
         case 'defence':
-            text = `${time} - ${logs[type][getRandom(logs[type].length) - 1]
-                .replace('[playerDefence]', player.name)
-                .replace('[playerKick]', enemy.name)}`;
+            text = text[getRandom(text.length) - 1]
+                    .replace(regSexDefence, function(word){
+                        return player.sex === 'f' ? changeSexVerb(word) : word;
+                    })
+                    .replace(regSexKick, function(word){
+                        return enemy.sex === 'f' ? changeSexVerb(word) : word;
+                    })
+                    .replace(regPlayer, player.name)
+                    .replace(regEnemy, enemy.name);
+            text = `${time} - ${text}`;
             break;
         case 'draw':
-            text = `${time} - ${logs[type]}`;
+            text = `${time} - ${text}`;
             break;
         case 'end':
-            text = `${time} - ${logs[type][getRandom(logs[type].length) - 1]
-                .replace('[playerWins]', player.name)
-                .replace('[playerLose]', enemy.name)}`;
+            text = text[getRandom(text.length) - 1]
+                    .replace(regPlayer, player.name)
+                    .replace(regEnemy, enemy.name);
+            text = `${time} - ${text}`;
             break;
         default:
             text = 'Бойцы решили немного передохнуть - война войной, а обед по расписанию'
@@ -248,8 +278,8 @@ const $btnFight = document.body.querySelector('.button');
 const $formFight = document.querySelector('form.control');
 const $chat = document.querySelector('.chat');
 
-const player1 = createPlayerObject(1, 'SUB-ZERO', 'subzero');
-const player2 = createPlayerObject(2, 'Scorpion');
+const player1 = createPlayerObject(1, 'SUB-ZERO', 'm', 'subzero');
+const player2 = createPlayerObject(2, 'Sonya', 'f');
 
 $arenas.appendChild(createPlayer(player1));
 $arenas.appendChild(createPlayer(player2));

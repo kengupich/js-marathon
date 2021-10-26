@@ -32,8 +32,8 @@ export const generateLogs = (type, player = {}, enemy = {}) => {
         }
 
         return str
-                .replace(regPlayer, `${symDef}${playerName}`)
-                .replace(regEnemy, `${symKick}${enemyName}`);
+                .replace(regPlayer, `<span class="playerChat">${symDef}${playerName}</span>`)
+                .replace(regEnemy, `<span class="playerChat">${symKick}${enemyName}</span>`);
     }
 
     switch(type){

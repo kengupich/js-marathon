@@ -16,14 +16,20 @@ export function createPlayerObject(player, name, gender, img = name.toLowerCase(
 
 const character = {
     elHP,
+    elHit,
     renderHP,
     changeHP,
+    renderHit,
     getFightResult,
 };
 
 
 function elHP(){
     return document.querySelector(`.player${this.player} .life`);
+}
+
+function elHit(){
+    return document.querySelector(`.player${this.player} .character`);
 }
 
 function changeHP(hp){
@@ -34,6 +40,12 @@ function renderHP(){
     this.elHP().style.width = `${this.currentHP}%`;
 }
 
+function renderHit(enemyHit){
+    console.log(enemyHit + "Hit")
+    this.elHit().classList.add(`${enemyHit}Hit`);
+    setTimeout(() => {this.elHit().classList.remove(`${enemyHit}Hit`)}, 1000)
+}
+
 function getFightResult(enemy, player){
     const {hit : enemyHit, value : enemyValue} = enemy;
     const {defence : playerDefence} = player;
@@ -41,6 +53,7 @@ function getFightResult(enemy, player){
     if(enemyHit != playerDefence){
         this.changeHP(enemyValue);
         this.renderHP();
+        this.renderHit(enemyHit);
         return 'hit';
     } else {
         return 'defence';

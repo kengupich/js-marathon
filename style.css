@@ -189,6 +189,42 @@ body {
     height: 268px;
 }
 
+.headHit:after, .bodyHit:after, .footHit:after{
+    content: '';
+    display: block;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 85px;
+    animation: .8s hitAnimation;
+}
+
+.headHit:after{
+    top: 0;
+}
+
+.bodyHit:after{
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.footHit:after{
+    bottom: 0;
+}
+
+@keyframes hitAnimation{
+    0%{
+        background-image: url('./assets/mk3-sprite-blood.gif');
+    }
+    99%{
+        background-image: url('./assets/mk3-sprite-blood.gif');
+    }
+    100%{
+        background-image: none;
+    }
+}
+
 .player1 .character {
     left: 60px;
 }
@@ -417,4 +453,8 @@ input[type=radio]:checked + label > span::before {
 }
 input[type=radio]:checked + label > span:hover {
     background: none;
+}
+
+.playerChat{
+    color: #3bdbff;
 }

@@ -1,0 +1,80 @@
+import { createElemWithClass } from './utils.js';
+
+const character = {
+    elHP,
+    elHit,
+    changeHP,
+    resetProp,
+    renderHP,
+    renderHit,
+    getFightResult,
+};
+
+export function createPlayerObject(player, name, gender, img = name.toLowerCase(), hp = 100, weapon = {'head' : '35', 'body' : '30', 'foot' : '25'}){
+    let newObject = Object.create(character);
+
+    newObject.player = player;
+    newObject.name = name;
+    newObject.gender = gender;
+    newObject.img = `http://reactmarathon-api.herokuapp.com/assets/${img}.gif`;
+    newObject.totalHP = hp;
+    newObject.currentHP = hp;
+    newObject.diffHP = 0;
+    newObject.weapon = weapon;
+
+    return newObject;
+}
+
+function elHP(){return document.querySelector(`.player${this.player} .life`);}
+
+function elHit(){return document.querySelector(`.player${this.player} .character`);}
+
+function changeHP(hp){this.diffHP = this.currentHP > hp ? hp : this.currentHP; this.currentHP -= this.diffHP;}
+
+function resetProp(prop){this[prop] = 0;}
+
+function renderHP(){this.elHP().style.width = `${this.currentHP}%`;}
+
+function renderHit(enemyHit){
+    this.elHit().classList.add(`${enemyHit}Hit`);
+    setTimeout(() => {this.elHit().classList.remove(`${enemyHit}Hit`)}, 1000)
+}
+
+function getFightResult(enemy, player){
+    const {hit : enemyHit, value : enemyValue} = enemy;
+    const {defence : playerDefence} = player;
+    
+    if(enemyHit != playerDefence){
+        this.changeHP(enemyValue);
+        this.renderHP();
+        this.renderHit(enemyHit);
+        return 'hit';
+    } else {
+        this.resetProp('diffHP');
+        return 'defence';
+    }
+}
+
+export const createPlayerElement = (object) => { 
+
+    const {player, name, totalHP, img} = object;
+    
+    const   $player = createElemWithClass('player' + player),
+            $progressbar = createElemWithClass('progressbar'),
+            $character = createElemWithClass('character'),
+            $life = createElemWithClass('life'),
+            $name = createElemWithClass('name'),
+            $img = createElemWithClass('', 'img');
+
+    $player.appendChild($progressbar);
+    $player.appendChild($character);
+    $character.appendChild($img);
+    $progressbar.appendChild($life);
+    $progressbar.appendChild($name);
+
+    $life.style.width = `${totalHP}%`;
+    $name.innerText = name;
+    $img.src = img;
+
+    return $player;
+}

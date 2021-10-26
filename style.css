@@ -189,6 +189,30 @@ body {
     height: 268px;
 }
 
+.headHit:after, .bodyHit:after, .footHit:after{
+    content: '';
+    display: block;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 85px;
+    background-image: url('./assets/mk3-sprite-blood.gif');
+}
+
+.headHit:after{
+    top: 0;
+}
+
+.bodyHit:after{
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.footHit:after{
+    bottom: 0;
+}
+
 .player1 .character {
     left: 60px;
 }
@@ -327,7 +351,7 @@ form:invalid button[class=button]:active::after {
     top: 60%;
     left: 50%;
     transform: translate(-50%, -50%);
-    display: flex;
+    display: none;
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
@@ -342,6 +366,16 @@ form:invalid button[class=button]:active::after {
 
 .buttonWrap {
     margin-top: 12px;
+}
+
+.startButtonWrap {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    position: absolute;
+    z-index: 2;
 }
 
 .inputWrap h2 {
@@ -407,4 +441,8 @@ input[type=radio]:checked + label > span::before {
 }
 input[type=radio]:checked + label > span:hover {
     background: none;
+}
+
+.playerChat{
+    color: #3bdbff;
 }

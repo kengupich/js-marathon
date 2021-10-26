@@ -45,14 +45,12 @@ const playerAttack = () => {
     const attack = {};
 
     for(let item of $formFight){
-        let {value, name, checked} = item;
-
-        if(checked === true && name === 'hit'){
-            attack.hit = value;
-            attack.value = getRandom(player.weapon[value]);
+        if(item.checked === true && item.name === 'hit'){
+            attack.hit = item.value;
+            attack.value = getRandom(player.weapon[item.value]);
         }
-        if(checked === true && name === 'defence'){
-            attack.defence = value;
+        if(item.checked === true && item.name === 'defence'){
+            attack.defence = item.value;
         }
 
         item.checked = false;

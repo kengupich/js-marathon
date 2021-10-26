@@ -10,7 +10,7 @@ export const generateLogs = (type, player = {}, enemy = {}) => {
 
     let text = logs[type];
     const {name : enemyName, gender : enemyGender} = enemy;
-    const {name : playerName, gender : playerGender, currentHP : playerCurrentHP, totalHP : playerTotalHP} = player;
+    const {name : playerName, gender : playerGender, currentHP : playerCurrentHP, diffHP : playerDiffHP, totalHP : playerTotalHP} = player;
     
     const regGenderDefence = /(?<=Defence\](?:\s\S)*\s\S+)(лся|шел|вел|ал|ил|ул|ял)(?=\s|,)/g; // look for verbs for change gender
     const regGenderKick = /(?<=Kick\](?:\s\S)*\s\S+)(лся|шел|вел|ал|ил|ул|ял)(?=\s|,)/g; // look for verbs for change gender
@@ -42,7 +42,7 @@ export const generateLogs = (type, player = {}, enemy = {}) => {
             break;
         case 'hit': 
             text = getReplacedText(text.getRandomArrayItem(), {changeGender: true, symDef: '🛡️', symKick: '🥊'})
-            text = `${time} - ${text} -${playerTotalHP-playerCurrentHP} [${playerCurrentHP}/${playerTotalHP}]`;
+            text = `${time} - ${text} -${playerDiffHP} [${playerCurrentHP}/${playerTotalHP}]`;
             break;
         case 'defence':
             text = getReplacedText(text.getRandomArrayItem(), {changeGender: true, symDef: '🛡️', symKick: '❌'})
@@ -59,6 +59,8 @@ export const generateLogs = (type, player = {}, enemy = {}) => {
             text = 'Бойцы решили немного передохнуть - война войной, а обед по расписанию'
             break;
     }
+
+    console.log(`${time} - ${playerName} -${playerDiffHP} [${playerCurrentHP}/${playerTotalHP}]`)
                     
     const el = `<p>${text}</p>`;
 

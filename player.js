@@ -1,5 +1,15 @@
 import { createElemWithClass } from './utils.js';
 
+const character = {
+    elHP,
+    elHit,
+    changeHP,
+    resetProp,
+    renderHP,
+    renderHit,
+    getFightResult,
+};
+
 export function createPlayerObject(player, name, gender, img = name.toLowerCase(), hp = 100, weapon = {'head' : '35', 'body' : '30', 'foot' : '25'}){
     let newObject = Object.create(character);
 
@@ -9,36 +19,21 @@ export function createPlayerObject(player, name, gender, img = name.toLowerCase(
     newObject.img = `http://reactmarathon-api.herokuapp.com/assets/${img}.gif`;
     newObject.totalHP = hp;
     newObject.currentHP = hp;
+    newObject.diffHP = 0;
     newObject.weapon = weapon;
 
     return newObject;
 }
 
-const character = {
-    elHP,
-    elHit,
-    renderHP,
-    changeHP,
-    renderHit,
-    getFightResult,
-};
+function elHP(){return document.querySelector(`.player${this.player} .life`);}
 
+function elHit(){return document.querySelector(`.player${this.player} .character`);}
 
-function elHP(){
-    return document.querySelector(`.player${this.player} .life`);
-}
+function changeHP(hp){this.diffHP = this.currentHP > hp ? hp : this.currentHP; this.currentHP -= this.diffHP;}
 
-function elHit(){
-    return document.querySelector(`.player${this.player} .character`);
-}
+function resetProp(prop){this[prop] = 0;}
 
-function changeHP(hp){
-    this.currentHP -= this.currentHP > hp ? hp : this.currentHP;
-}
-
-function renderHP(){
-    this.elHP().style.width = `${this.currentHP}%`;
-}
+function renderHP(){this.elHP().style.width = `${this.currentHP}%`;}
 
 function renderHit(enemyHit){
     this.elHit().classList.add(`${enemyHit}Hit`);
@@ -55,9 +50,9 @@ function getFightResult(enemy, player){
         this.renderHit(enemyHit);
         return 'hit';
     } else {
+        this.resetProp('diffHP');
         return 'defence';
     }
-
 }
 
 export const createPlayerElement = (object) => { 

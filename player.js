@@ -41,7 +41,6 @@ function renderHP(){
 }
 
 function renderHit(enemyHit){
-    console.log(enemyHit + "Hit")
     this.elHit().classList.add(`${enemyHit}Hit`);
     setTimeout(() => {this.elHit().classList.remove(`${enemyHit}Hit`)}, 1000)
 }

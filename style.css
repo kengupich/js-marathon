@@ -197,7 +197,7 @@ body {
     transform: translateX(-50%);
     width: 100px;
     height: 85px;
-    animation: .8s hitAnimation;
+    background-image: url('./assets/mk3-sprite-blood.gif');
 }
 
 .headHit:after{
@@ -211,18 +211,6 @@ body {
 
 .footHit:after{
     bottom: 0;
-}
-
-@keyframes hitAnimation{
-    0%{
-        background-image: url('./assets/mk3-sprite-blood.gif');
-    }
-    99%{
-        background-image: url('./assets/mk3-sprite-blood.gif');
-    }
-    100%{
-        background-image: none;
-    }
 }
 
 .player1 .character {

@@ -60,7 +60,7 @@ export const generateLogs = (type, player = {}, enemy = {}) => {
             break;
     }
 
-    console.log(`${time} - ${playerName} -${playerDiffHP} [${playerCurrentHP}/${playerTotalHP}]`)
+    //console.log(`${time} - ${playerName} -${playerDiffHP} [${playerCurrentHP}/${playerTotalHP}]`)
                     
     const el = `<p>${text}</p>`;
 

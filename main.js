@@ -1,22 +1,17 @@
-import { createPlayerObject, createPlayerElement } from './player.js';
-import { getRoundResult, getMatchResult, startMatch } from './fight.js'
+import Game from './game.js';
 
-export const $arenas = document.body.querySelector('.arenas');
-export const $formFight = document.querySelector('form.control');
-const $startFight = document.querySelector('.startButtonWrap .button');
+const game = new Game({
+    arenasEl : document.body.querySelector('.arenas'),
+    formFightEl : document.querySelector('form.control'),
+    btnFightEl : document.body.querySelector('.control .button'),
+    startMatchEl : document.querySelector('.startButtonWrap .button'),
+});
 
-export const player = createPlayerObject(1, 'SUB-ZERO', 'm', 'subzero');
-export const enemy = createPlayerObject(2, 'Sonya', 'f');
-
-$arenas.appendChild(createPlayerElement(player));
-$arenas.appendChild(createPlayerElement(enemy));
-
-$startFight.addEventListener('click', function(e){
-    startMatch.call($startFight);
+game.startMatchEl.addEventListener('click', function(e){
+    game.startMatch();
 })
 
-$formFight.addEventListener('submit', function(e){
+game.formFightEl.addEventListener('submit', function(e){
     e.preventDefault();
-    getRoundResult();
-    getMatchResult();
-}) 
+    game.startRound();
+})

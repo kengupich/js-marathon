@@ -1,11 +1,15 @@
 export const createElemWithClass = (className, tag = 'div') => {
-    const $elem = document.createElement(tag);
+    const elem = document.createElement(tag);
     
-    if(className) {
-        $elem.className = className;
+    if (Array.isArray(className)) {
+        className.forEach(item => {
+            elem.classList.add(item);
+        })
+    } else if(className !== '') {
+        elem.classList.add(className);
     }
 
-    return $elem;
+    return elem;
 }
 
 export const getRandom = (number) => Math.ceil(Math.random() * number); 

@@ -59,9 +59,7 @@ export const generateLogs = (type, player = {}, enemy = {}) => {
             text = 'Бойцы решили немного передохнуть - война войной, а обед по расписанию'
             break;
     }
-
-    //console.log(`${time} - ${playerName} -${playerDiffHP} [${playerCurrentHP}/${playerTotalHP}]`)
-                    
+           
     const el = `<p>${text}</p>`;
 
     $chat.insertAdjacentHTML('afterbegin', el)

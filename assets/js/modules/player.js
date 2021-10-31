@@ -4,12 +4,10 @@ export default class Player {
     constructor(props) {
         this.player = props.player;
         this.name = props.name;
-        //this.gender = gender;
-        this.img = props.img//`http://reactmarathon-api.herokuapp.com/assets/${img}.gif`;
+        this.img = props.img
         this.totalHP = props.hp;
         this.currentHP = props.hp;
         this.diffHP = 0;
-        //this.weapon = weapon;
     }
 
     elHP(){return document.querySelector(`.player${this.player} .life`);}

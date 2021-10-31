@@ -1,7 +1,7 @@
 import Player from './player.js';
 import FetchGameApi from './fetchGameApi.js';
 import { generateLogs } from './logs.js';
-import { getRandom, getRandomArrayItem, createElemWithClass } from './utils.js'
+import { createElemWithClass } from './utils.js'
 
 export default class Game{
     constructor(props){

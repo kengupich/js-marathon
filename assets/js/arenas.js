@@ -1,13 +1,12 @@
-import Game from './game.js';
+import Game from './modules/game.js';
 
 const game = new Game({
     arenasEl : document.body.querySelector('.arenas'),
     formFightEl : document.querySelector('form.control'),
-    btnFightEl : document.body.querySelector('.control .button'),
-    startMatchEl : document.querySelector('.startButtonWrap .button'),
+    btnFightEl : document.body.querySelector('.control .button')
 });
 
-game.startMatchEl.addEventListener('click', function(e){
+document.addEventListener('DOMContentLoaded', function(e){
     game.startMatch();
 })
 

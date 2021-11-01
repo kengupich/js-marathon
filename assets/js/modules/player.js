@@ -1,15 +1,13 @@
 import { createElemWithClass } from './utils.js';
 
-export class Player {
-    constructor({player, name, gender, img = name.toLowerCase(), hp = 100, weapon = {'head' : '35', 'body' : '30', 'foot' : '25'}}) {
-        this.player = player;
-        this.name = name;
-        this.gender = gender;
-        this.img = `http://reactmarathon-api.herokuapp.com/assets/${img}.gif`;
-        this.totalHP = hp;
-        this.currentHP = hp;
+export default class Player {
+    constructor(props) {
+        this.player = props.player;
+        this.name = props.name;
+        this.img = props.img
+        this.totalHP = props.hp;
+        this.currentHP = props.hp;
         this.diffHP = 0;
-        this.weapon = weapon;
     }
 
     elHP(){return document.querySelector(`.player${this.player} .life`);}
@@ -28,6 +26,7 @@ export class Player {
     }
 
     createPlayerElement = () => { 
+        
         const   $player = createElemWithClass('player' + this.player),
                 $progressbar = createElemWithClass('progressbar'),
                 $character = createElemWithClass('character'),

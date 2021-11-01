@@ -1,42 +1,39 @@
-import { Player } from './player.js';
+import Player from './player.js';
+import FetchGameApi from './fetchGameApi.js';
 import { generateLogs } from './logs.js';
-import { getRandom, getRandomArrayItem, createElemWithClass } from './utils.js'
+import { createElemWithClass } from './utils.js'
 
 export default class Game{
     constructor(props){
         this.player = new Player({
-            player: 1, 
-            name: 'SUB-ZERO', 
-            gender: 'm', 
-            img: 'subzero'
+            ...JSON.parse(localStorage.getItem('player1')),
+            player: 1
         }),
         this.enemy = new Player({
-            player: 2, 
-            name: 'Sonya', 
-            gender: 'f', 
+            ...JSON.parse(localStorage.getItem('player2')),
+            player: 2
         })
         this.arenasEl = props.arenasEl;
         this.formFightEl = props.formFightEl;
-        this.startMatchEl = props.startMatchEl;
         this.btnFightEl = props.btnFightEl;
     }
 
     /* Управление игрой */
 
     startMatch = () => {
-        this.startMatchEl.style.display = 'none'
-        this.formFightEl.style.display = 'flex'
         this.arenasEl.appendChild(this.player.createPlayerElement());
         this.arenasEl.appendChild(this.enemy.createPlayerElement());
         generateLogs('start', this.player, this.enemy);
     };
 
-    startRound = () => {
-        const enemyAttackObject = this.enemyAttack();
-        const playerAttackObject = this.playerAttack();
+    async startRound(){
+        
+        const {hit, defence} = this.playerAttack();
+
+        const {player1 : playerFightObject, player2 : enemyFightObject} = await FetchGameApi.getFightObjects(hit, defence);
     
-        const playerFightType = this.player.getFightResult(enemyAttackObject, playerAttackObject);
-        const enemyFightType = this.enemy.getFightResult(playerAttackObject, enemyAttackObject);
+        const playerFightType = this.player.getFightResult(enemyFightObject, playerFightObject);
+        const enemyFightType = this.enemy.getFightResult(playerFightObject, enemyFightObject);
     
         generateLogs(playerFightType, this.player, this.enemy);
         generateLogs(enemyFightType, this.enemy, this.player);
@@ -81,7 +78,7 @@ export default class Game{
         reloadButton.innerText = 'Restart';
 
         reloadButton.addEventListener('click', function(){
-            window.location.reload();
+            window.location.pathname = 'index.html';
         })
 
         return reloadWrap;
@@ -94,22 +91,13 @@ export default class Game{
     
         return $matchResultTitle;
     }
-
-    enemyAttack = () => {
-        const hit = Object.keys(this.enemy.weapon).getRandomArrayItem();
-        const value = getRandom(this.enemy.weapon[hit]);
-        const defence = Object.keys(this.player.weapon).getRandomArrayItem();
-    
-        return {hit, value, defence}
-    };
     
     playerAttack = () => {
-        let hit, value, defence;
+        let hit, defence;
 
         for(let item of this.formFightEl){
             if(item.checked === true && item.name === 'hit'){
                 hit = item.value;
-                value = getRandom(this.player.weapon[item.value]);
             }
             if(item.checked === true && item.name === 'defence'){
                 defence = item.value;
@@ -117,6 +105,6 @@ export default class Game{
             item.checked = false;
         }
         
-        return {hit, value, defence}
+        return {hit, defence}
     }
 }
